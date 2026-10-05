@@ -1,0 +1,560 @@
+/* ============================================================
+   static/style.css
+   Global styles for the Salary Prediction web application
+   ============================================================ */
+
+/* --- Reset & base ------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-bg        : #f3f4f6;
+  --color-surface   : #ffffff;
+  --color-border    : #e5e7eb;
+  --color-text      : #1f2328;
+  --color-muted     : #57606a;
+  --color-accent    : #2563eb;
+  --color-success   : #16a34a;
+  --color-warning   : #d97706;
+  --color-danger    : #dc2626;
+  --color-purple    : #7c3aed;
+  --radius          : 10px;
+  --shadow          : 0 1px 4px rgba(0,0,0,.08);
+  --font            : -apple-system, "Segoe UI", system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+a { color: var(--color-accent); }
+a:hover { text-decoration: underline; }
+
+code {
+  background: #f0f1f3;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.88em;
+}
+
+/* --- Layout ------------------------------------------------- */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+/* --- Site header ------------------------------------------- */
+.site-header {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  color: #fff;
+  padding: 40px 0 32px;
+  text-align: center;
+}
+
+.header-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 20px;
+  font-size: 12px;
+  letter-spacing: .06em;
+  padding: 3px 14px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.site-title {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.site-subtitle {
+  font-size: 1rem;
+  opacity: .85;
+  margin-bottom: 24px;
+}
+
+/* Pipeline strip in header */
+.pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.pipeline .step {
+  background: rgba(255,255,255,.18);
+  border-radius: 14px;
+  padding: 3px 10px;
+}
+
+.pipeline .arrow { opacity: .6; }
+
+/* --- Card --------------------------------------------------- */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 30px;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.card-description {
+  color: var(--color-muted);
+  margin-bottom: 18px;
+  font-size: 0.93rem;
+}
+
+.sub-heading {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 20px 0 10px;
+  color: var(--color-text);
+}
+
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* --- Buttons ----------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: opacity .15s, transform .1s;
+}
+
+.btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.btn:not(:disabled):hover  { opacity: .88; }
+.btn:not(:disabled):active { transform: scale(.97); }
+
+.btn-primary { background: var(--color-accent); color: #fff; }
+.btn-success { background: var(--color-success); color: #fff; }
+.btn-accent  { background: var(--color-purple);  color: #fff; }
+
+/* --- Upload area ------------------------------------------- */
+.upload-area {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 16px;
+  transition: border-color .2s, background .2s;
+  position: relative;
+}
+
+.upload-area.dragover {
+  border-color: var(--color-accent);
+  background: #eff6ff;
+}
+
+.file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-label {
+  display: block;
+  cursor: pointer;
+}
+
+.upload-icon { font-size: 2.2rem; margin-bottom: 8px; }
+
+.upload-text {
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.upload-hint { font-size: 0.82rem; color: var(--color-muted); }
+
+.file-name-display {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+/* --- Messages ---------------------------------------------- */
+.message {
+  margin-top: 14px;
+  padding: 10px 16px;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.message.error   { background: #fef2f2; color: var(--color-danger);  border: 1px solid #fecaca; }
+.message.success { background: #f0fdf4; color: var(--color-success); border: 1px solid #bbf7d0; }
+.message.info    { background: #eff6ff; color: var(--color-accent);  border: 1px solid #bfdbfe; }
+
+/* --- Stats grid -------------------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.stat-box {
+  background: #f7f8fa;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+/* --- Table -------------------------------------------------- */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table th, .data-table td {
+  padding: 9px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table thead th {
+  background: #f7f8fa;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--color-muted);
+}
+
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: #f7f8fa; }
+
+/* --- Basic stats block ------------------------------------- */
+.stats-block {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.stats-col { }
+
+.stats-col h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--color-muted);
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 4px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  padding: 3px 0;
+}
+
+.stats-row span:first-child { color: var(--color-muted); }
+.stats-row span:last-child  { font-weight: 600; }
+
+/* --- Metrics grid ------------------------------------------ */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.metric-box {
+  background: #f7f8fa;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.metric-box.green  { border-left-color: var(--color-success); }
+.metric-box.orange { border-left-color: var(--color-warning); }
+.metric-box.purple { border-left-color: var(--color-purple);  }
+
+.metric-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-top: 2px;
+}
+
+/* Equation box */
+.equation-box {
+  background: #1e3a5f;
+  color: #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-family: "Courier New", monospace;
+  font-size: 1rem;
+  margin-top: 4px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* --- Charts ------------------------------------------------- */
+.placeholder-box {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  padding: 48px;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.chart-box {
+  width: 100%;
+  min-height: 420px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  background: #fff;
+}
+
+/* --- Prediction form --------------------------------------- */
+.predict-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.87rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--color-muted);
+}
+
+.text-input {
+  width: 200px;
+  padding: 9px 12px;
+  font-size: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  outline: none;
+  transition: border-color .15s;
+}
+
+.text-input:focus { border-color: var(--color-accent); }
+
+.text-input:disabled { background: #f7f8fa; cursor: not-allowed; }
+
+/* Result card */
+.result-card {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 28px 30px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.result-label {
+  font-size: 0.82rem;
+  opacity: .8;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.result-value {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+
+.result-sub {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  opacity: .8;
+}
+
+/* --- Explanation section ----------------------------------- */
+.explain-intro {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  color: #1e3a5f;
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.glossary-item {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: #fafafa;
+}
+
+.glossary-term {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--color-accent);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.glossary-def { font-size: 0.88rem; color: var(--color-muted); }
+
+/* --- Pipeline diagram (bottom of explain section) ---------- */
+.pipeline-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: #f7f8fa;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.pipe-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-width: 90px;
+  text-align: center;
+}
+
+.pipe-icon { font-size: 1.5rem; }
+.pipe-label { font-size: 0.75rem; font-weight: 600; color: var(--color-muted); margin-top: 4px; }
+
+.pipe-arrow { font-size: 1.2rem; color: var(--color-border); }
+
+/* --- Site footer ------------------------------------------- */
+.site-footer {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  text-align: center;
+  padding: 18px 0;
+}
+
+/* --- Utility ----------------------------------------------- */
+.hidden { display: none !important; }
+
+.link-download {
+  font-size: 0.85rem;
+  margin-left: 8px;
+}
+
+/* --- Loading spinner --------------------------------------- */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- Responsive -------------------------------------------- */
+@media (max-width: 600px) {
+  .card { padding: 20px 16px; }
+  .predict-form { flex-direction: column; align-items: flex-start; }
+  .text-input { width: 100%; }
+}

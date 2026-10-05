@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salary Prediction | Linear Regression</title>
+  <!-- Plotly CDN -->
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <!-- Local stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<!-- ===================================================================
+     HEADER / DASHBOARD
+=================================================================== -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-badge">IBM Applied AI &amp; ML Internship Project</div>
+    <h1 class="site-title">Salary Prediction Using Machine Learning</h1>
+    <p class="site-subtitle">
+      Predict salary based on years of professional experience using Linear Regression
+    </p>
+    <!-- Pipeline steps -->
+    <div class="pipeline">
+      <span class="step">CSV Dataset</span>
+      <span class="arrow">→</span>
+      <span class="step">Preprocessing</span>
+      <span class="arrow">→</span>
+      <span class="step">Train / Test Split</span>
+      <span class="arrow">→</span>
+      <span class="step">Linear Regression</span>
+      <span class="arrow">→</span>
+      <span class="step">Evaluation</span>
+      <span class="arrow">→</span>
+      <span class="step">Prediction</span>
+    </div>
+  </div>
+</header>
+
+<main class="container main-content">
+
+  <!-- ================================================================
+       SECTION 1 – DATASET UPLOAD
+  ================================================================ -->
+  <section class="card" id="section-upload">
+    <h2 class="card-title">
+      <span class="step-badge">1</span> Dataset Upload
+    </h2>
+    <p class="card-description">
+      Upload a CSV file containing <code>YearsExperience</code> and <code>Salary</code> columns.
+      <a href="/sample-dataset" class="link-download">Download sample dataset</a>
+    </p>
+
+    <div class="upload-area" id="upload-area">
+      <input type="file" id="csv-file" accept=".csv" class="file-input" />
+      <label for="csv-file" class="upload-label">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">Click to select a CSV file<br /><span class="upload-hint">or drag &amp; drop here</span></div>
+      </label>
+      <div id="file-name-display" class="file-name-display hidden"></div>
+    </div>
+
+    <button id="btn-upload" class="btn btn-primary" disabled>
+      Upload &amp; Preview Dataset
+    </button>
+
+    <!-- Error / success messages -->
+    <div id="upload-message" class="message hidden"></div>
+
+    <!-- Dataset info – shown after successful upload -->
+    <div id="dataset-info" class="hidden">
+      <div class="stats-grid" id="stats-grid">
+        <!-- JS will populate -->
+      </div>
+      <h3 class="sub-heading">Dataset Preview (first 10 rows)</h3>
+      <div class="table-wrapper">
+        <table class="data-table" id="preview-table">
+          <thead>
+            <tr><th>#</th><th>Years of Experience</th><th>Salary (₹)</th></tr>
+          </thead>
+          <tbody id="preview-tbody">
+            <!-- JS will populate -->
+          </tbody>
+        </table>
+      </div>
+      <h3 class="sub-heading">Basic Statistics</h3>
+      <div id="basic-stats" class="stats-block">
+        <!-- JS will populate -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 2 – MODEL TRAINING
+  ================================================================ -->
+  <section class="card" id="section-train">
+    <h2 class="card-title">
+      <span class="step-badge">2</span> Model Training
+    </h2>
+    <p class="card-description">
+      Click the button below to split the data (80% train / 20% test) and train
+      a <strong>Linear Regression</strong> model using scikit-learn.
+    </p>
+
+    <button id="btn-train" class="btn btn-success" disabled>
+      ⚙ Train Model
+    </button>
+
+    <div id="train-message" class="message hidden"></div>
+
+    <!-- Metrics – shown after training -->
+    <div id="train-results" class="hidden">
+      <div class="metrics-grid" id="metrics-grid">
+        <!-- JS will populate -->
+      </div>
+      <div class="equation-box" id="equation-box">
+        <!-- JS will populate -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 3 – VISUALIZATION
+  ================================================================ -->
+  <section class="card" id="section-charts">
+    <h2 class="card-title">
+      <span class="step-badge">3</span> Interactive Visualizations
+    </h2>
+    <p class="card-description">
+      Explore the regression line over the training data and the model's prediction accuracy.
+    </p>
+
+    <div id="charts-placeholder" class="placeholder-box">
+      Train the model to see the visualizations.
+    </div>
+
+    <div id="charts-container" class="hidden">
+      <div id="scatter-chart" class="chart-box"></div>
+      <div id="avp-chart" class="chart-box"></div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 4 – SALARY PREDICTION
+  ================================================================ -->
+  <section class="card" id="section-predict">
+    <h2 class="card-title">
+      <span class="step-badge">4</span> Salary Prediction
+    </h2>
+    <p class="card-description">
+      Enter the number of years of professional experience to estimate the expected salary.
+    </p>
+
+    <div class="predict-form">
+      <label for="years-input" class="input-label">Enter Years of Experience</label>
+      <input
+        type="number"
+        id="years-input"
+        class="text-input"
+        placeholder="e.g. 5.5"
+        min="0"
+        step="0.1"
+        disabled
+      />
+      <button id="btn-predict" class="btn btn-accent" disabled>
+        💡 Predict Salary
+      </button>
+    </div>
+
+    <div id="predict-message" class="message hidden"></div>
+
+    <div id="predict-result" class="hidden">
+      <div class="result-card">
+        <div class="result-label">Model Estimate (not a guaranteed salary)</div>
+        <div class="result-value" id="result-value">₹0</div>
+        <div class="result-sub" id="result-sub"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 5 – MODEL EXPLANATION
+  ================================================================ -->
+  <section class="card" id="section-explain">
+    <h2 class="card-title">
+      <span class="step-badge">5</span> How Does This Work? (Beginner's Guide)
+    </h2>
+
+    <div class="explain-intro">
+      <p>
+        <strong>Linear Regression</strong> learns the relationship between <em>years of experience</em>
+        and <em>salary</em> from historical data. It finds the best-fit straight line through
+        the data points and uses this line to estimate a salary for any given number of years
+        of experience.
+      </p>
+    </div>
+
+    <div class="glossary-grid">
+      <div class="glossary-item">
+        <div class="glossary-term">Feature (X)</div>
+        <div class="glossary-def">
+          The input variable the model uses to make a prediction.
+          Here it is <strong>Years of Experience</strong>.
+        </div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Target (y)</div>
+        <div class="glossary-def">
+          The output variable the model tries to predict.
+          Here it is <strong>Salary</strong>.
+        </div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Training Data</div>
+        <div class="glossary-def">
+          The portion of the dataset (80%) used to <em>teach</em> the model
+          by showing it many (Experience, Salary) examples.
+        </div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Testing Data</div>
+        <div class="glossary-def">
+          The remaining 20% of data that the model has <em>never seen</em>,
+          used to measure how well it generalises to new examples.
+        </div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Regression Coefficient</div>
+        <div class="glossary-def">
+          The <em>slope</em> of the regression line – it tells us how much
+          the salary increases for every additional year of experience.
+        </div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Intercept</div>
+        <div class="glossary-def">
+          The predicted salary when years of experience is zero –
+          the point where the regression line crosses the y-axis.
+        </div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">R² Score</div>
+        <div class="glossary-def">
+          Tells us what percentage of the variation in salary is explained
+          by years of experience. Closer to <strong>1.0</strong> is better.
+        </div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">MAE / RMSE</div>
+        <div class="glossary-def">
+          Average difference between actual and predicted salaries.
+          Lower values indicate a more accurate model.
+        </div>
+      </div>
+    </div>
+
+    <!-- ML Pipeline diagram (pure CSS/HTML) -->
+    <h3 class="sub-heading">The Complete ML Pipeline</h3>
+    <div class="pipeline-diagram">
+      <div class="pipe-step">
+        <div class="pipe-icon">📁</div>
+        <div class="pipe-label">CSV Data</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🧹</div>
+        <div class="pipe-label">Clean &amp; Validate</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">✂️</div>
+        <div class="pipe-label">Train / Test Split</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">📈</div>
+        <div class="pipe-label">Train Model</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">📊</div>
+        <div class="pipe-label">Evaluate</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">💰</div>
+        <div class="pipe-label">Predict</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    Salary Prediction Using Linear Regression &nbsp;|&nbsp;
+    IBM Applied AI &amp; Machine Learning Internship Project
+  </div>
+</footer>
+
+<!-- Local JS -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
